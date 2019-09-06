@@ -56,6 +56,12 @@ public class Club {
 		dateCreation = dateCreation;
 		this.petTypeClub = petTypeClub;
 		clubOwners = new ArrayList<Owner>();
+		
+		try {
+			serializarDatosPets();
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//METODOS GET Y SET
@@ -85,168 +91,148 @@ public class Club {
 		this.petTypeClub = petTypeClub;
 	}
 
-	//METODO TOSTRING
+	public ArrayList<Owner> getClubOwners() {
+		return clubOwners;
+	}
+
+	public void setClubOwners(ArrayList<Owner> clubOwners) {
+		this.clubOwners = clubOwners;
+	}
 	
+	//METODO TOSTRING
+
 	@Override
 	public String toString() {
 		return "Club id " + idClub + ", club name " + clubName + ", date of creation " + dateCreation + ", favorite pet type "
 				+ petTypeClub;
 	}
 	
-	
 	//METODOS
-	
-	//Metodo para serializar los datos del club
-	
-	private void serializarDatosClub() throws FileNotFoundException, IOException, ParseException{
-		
-		int contador = 0;
-		String nombreArchivo = "DATOSCLUB";
-		File archivo = new File(RAIZ, nombreArchivo);
-		BufferedReader lector = new BufferedReader(new FileReader(archivo));
-		
-		try {
-			//lee la primera linea
-			lector.readLine();
-		}
-		catch(IOException ioException) {
-			System.err.printf("\nExcepcion: %s\n", ioException);
-			System.out.println("Debe aber por lo menos un dato");
-		}
-		
-		String datos = null;
-		
-		try {
-			//lee la segunda linea
-			datos = lector.readLine();
-		}
-		catch(IOException ioException) {
-			System.err.printf("\nExcepcion: %s\n", ioException);
-			System.out.println("Debe haber por lo menos un dato");
-		}
-		
-		while((datos = lector.readLine()) != null) {
-			
-			//Buscamos la primera coma de la linea
-			int primeraComa = datos.indexOf(",");
-			
-			//Si primeraComa es = -1 quiere decir que no la encontro
-			if(primeraComa != -1) {
-				//despuesPrimeraComa es el texto que resta despues de encontrar la primera coma
-				String despuesPrimeraComa = datos.substring(primeraComa + 1);
-				//Buscamos en despuesPrimeraComa la segunda coma de la linea
-				int segundaComa = despuesPrimeraComa.indexOf(",");
-			
-				if(segundaComa != -1) {
-					//despuesSegundaComa es el texto que resta despues de encontrar la segunda coma
-					String despuesSegundaComa = despuesPrimeraComa.substring(segundaComa + 1);
-					//Buscamos en despuesSegundaComa la tercera y ultima coma que deberia tener la linea
-					int terceraComa = despuesSegundaComa.indexOf(",");
-			
-					if(terceraComa != -1) {
-						String despuesTerceraComa = despuesSegundaComa.substring(terceraComa + 1);
-				
-						String idC = datos.substring(0, primeraComa);
-						String clubN = datos.substring(primeraComa, segundaComa);
-						String dateC = datos.substring(segundaComa, terceraComa);
-						String petTC = datos.substring(terceraComa);
-					
-						DateFormat formato = new SimpleDateFormat ("yyyy/MM/dd");
-						Date dateClubs = formato.parse(dateC);
-						Club clubNuevo = new Club(idC, clubN, dateClubs, petTC);
-						System.out.println(clubNuevo.toString());
-					}
-				}
-			}
-		}
-		
-		lector.close();
-	}
 	
 	//Metodo para serializar los datos de los dueños
 	
-	private void serializarDatosOwner() throws FileNotFoundException, IOException, ParseException{
-		
-		int contador = 0;
-		String nombreArchivo = "MOCK_DATA" + " (" + contador + ")";
-		File archivo = new File(RUTA_DATOS_OWNER, nombreArchivo);
-		BufferedReader lector = new BufferedReader(new FileReader(archivo));
-		
-		try {
-			//lee la primera linea
-			lector.readLine();
-		}
-		catch(IOException ioException) {
-			System.err.printf("\nExcepcion: %s\n", ioException);
-			System.out.println("Debe haber por lo menos un dato");
-		}
-		
-		String datos = null;
-		
-		try {
-			//lee la segunda linea
-			datos = lector.readLine();
-		}
-		catch(IOException ioException) {
-			System.err.printf("\nExcepcion: %s\n", ioException);
-			System.out.println("Debe haber por lo menos un dato");
-		}
-		
-		while((datos = lector.readLine()) != null) {
+	public void serializarDatosPets() throws FileNotFoundException, IOException, ParseException{
 			
-			//Buscamos la primera coma de la linea
-			int primeraComa = datos.indexOf(",");
+		//do {
+			int contador = 1;
+			String nombreArchivo = "//MOCKDATA" + " (" + contador + ").csv";
+			File archivo = new File(Club.RUTA_DATOS_PET + nombreArchivo);
+			BufferedReader lector = new BufferedReader(new FileReader(archivo));
+		do {
+			try {
+				//lee la primera linea
+				lector.readLine();
+			} catch(IOException ioException) {
+				System.err.printf("\nExcepcion: %s\n", ioException);
+				System.out.println("Debe haber por lo menos un dato");
+			}
+		
+			String datos = null;
+		//do {
 			
-			//Si primeraComa es = -1 quiere decir que no la encontro
-			if(primeraComa != -1) {
-				//despuesPrimeraComa es el texto que resta despues de encontrar la primera coma
-				String despuesPrimeraComa = datos.substring(primeraComa + 1);
-				//Buscamos en despuesPrimeraComa la segunda coma de la linea
-				int segundaComa = despuesPrimeraComa.indexOf(",");
+			try {
+				//lee la segunda linea
+				datos = lector.readLine();
+			}
+			catch(IOException ioException) {
+				System.err.printf("\nExcepcion: %s\n", ioException);
+				System.out.println("Debe haber por lo menos un dato");
+			}
 			
-				if(segundaComa != -1) {
-					//despuesSegundaComa es el texto que resta despues de encontrar la segunda coma
-					String despuesSegundaComa = despuesPrimeraComa.substring(segundaComa + 1);
-					//Buscamos en despuesSegundaComa la tercera y ultima coma que deberia tener la linea
-					int terceraComa = despuesSegundaComa.indexOf(",");
-			
-					if(terceraComa != -1) {
-						String despuesTerceraComa = despuesSegundaComa.substring(terceraComa + 1);
+			if (datos != null) {
 				
-						String idO = datos.substring(0, primeraComa);
-						String nameO = datos.substring(primeraComa, segundaComa);
-						String bornDateO = datos.substring(segundaComa, terceraComa);
-						String petTO = datos.substring(terceraComa);
-					
-						DateFormat formato = new SimpleDateFormat ("yyyy/MM/dd");
-						Date bornDate = formato.parse(bornDateO);
-						Owner owner = new Owner(idO, nameO, bornDate, petTO);
-						addOwners(owner);
-						contador++;
+				//Buscamos la primera coma de la linea
+				int primeraComa = datos.indexOf(",");
+		
+				//Si primeraComa es = -1 quiere decir que no la encontro
+				if(primeraComa != -1) {
+					//despuesPrimeraComa es el texto que resta despues de encontrar la primera coma
+					String despuesPrimeraComa = datos.substring(primeraComa + 1);
+					//Buscamos en despuesPrimeraComa la segunda coma de la linea
+					int segundaComa = despuesPrimeraComa.indexOf(",");
+		
+					if(segundaComa != -1) {
+						//despuesSegundaComa es el texto que resta despues de encontrar la segunda coma
+						String despuesSegundaComa = despuesPrimeraComa.substring(segundaComa + 1);
+						//Buscamos en despuesSegundaComa la tercera y ultima coma que deberia tener la linea
+						int terceraComa = despuesSegundaComa.indexOf(",");
+		
+						if(terceraComa != -1) {
+							String despuesTerceraComa = despuesSegundaComa.substring(terceraComa + 1);
+							int cuartaComa = despuesTerceraComa.indexOf(",");
+							
+							if(cuartaComa != -1) {
+								String despuesCuartaComa = despuesTerceraComa.substring(cuartaComa + 1);
+							}
+			
+							String petId = datos.substring(0, primeraComa);
+							String petName = despuesPrimeraComa.substring(0, segundaComa);
+							String bornDateP = despuesSegundaComa.substring(0, terceraComa);
+							String petGender = despuesTerceraComa.substring(0, terceraComa);
+							String petType = despuesTerceraComa.substring(cuartaComa);
+				
+							DateFormat formato = new SimpleDateFormat ("yyyy-MM-dd");
+							Date bornDate = formato.parse(bornDateP);
+							Pet pet = new Pet (petId, petName, bornDate, petGender, petType);
+							addPet(pet);
+						}
 					}
+				} 
+			}
+			
+			if(datos == null) {
+				contador++;
+				try {	
+					nombreArchivo = "//MOCK_DATA" + " (" + contador + ").csv";
+					archivo = new File(Club.RUTA_DATOS_PET + nombreArchivo);
+					lector = new BufferedReader(new FileReader(archivo));	
+				} catch (FileNotFoundException fileNotFoundE) {
+					archivo = null;
 				}
 			}
-		}
+			
+		} while(archivo != null);
+		
 		
 		lector.close();
 	}
 	
-	//Metodo para agregar los dueños al club
 	
-	private void addOwners(Owner owner) {
-		boolean igual = false;
+	//Metodo que verifica que el id de un dueño no sea igual a otro
+	
+	public boolean verificarId(Owner owner) {
+		boolean existeIdIgual = false;
 		for(int i = 0; i < clubOwners.size(); i++) {
-			if(clubOwners.size() <10) {
-				if(clubOwners.get(i).getIdOwner() == owner.getIdOwner()) {
-					igual = true;
-				}
+			if(clubOwners.get(i).getIdOwner().equals(owner.getIdOwner())) {
+				existeIdIgual = true;
 			}
 		}
 		
-		if(igual != true) {
-			clubOwners.add(owner);
-		}
+		return existeIdIgual;
 	}
 	
+	public void agregarDueno(Owner owner) {
+		clubOwners.add(owner);
+	}
+	
+	//Metodo mostrar informacion dueños
+	
+	public String mostrarInfoOwner() {
+		String msg = "";
+		for(int i = 0; i < clubOwners.size(); i++) {
+			msg += "Nombre: " + clubOwners.get(i).getNameOwner();
+		}
+		return msg;
+	}
+	
+	//Metodo para agregar las mascotas a un dueño
+	
+	public void addPet(Pet pet) {
+		for(int i = 0; i < clubOwners.size(); i++) {
+			if(clubOwners.get(i).verificarNombreMascotas(pet) == false) {
+				clubOwners.get(i).agregarPet(pet);
+			}
+		}
+	}
 	
 } //Cierra la clase
