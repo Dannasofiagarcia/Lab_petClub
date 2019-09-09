@@ -1,8 +1,9 @@
 package model;
 
+import java.io.*;
 import java.util.Date;
 
-public class Pet {
+public class Pet implements Serializable {
 	
 	//CONSTANTES
 	

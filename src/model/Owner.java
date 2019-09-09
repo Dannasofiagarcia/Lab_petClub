@@ -1,17 +1,10 @@
 package model;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.io.*;
+import java.text.*;
+import java.util.*;
 
-public class Owner {
+public class Owner implements Serializable {
 	
 	//ATRIBUTOS
 	
@@ -19,6 +12,7 @@ public class Owner {
 	private String nameOwner;
 	private Date bornDateOwner;
 	private String petTypeOwner;
+	private int numeroDeMascotas;
 	
 	//RELACIONES
 	
@@ -32,6 +26,21 @@ public class Owner {
 		this.bornDateOwner = bornDateOwner;
 		this.petTypeOwner = petTypeOwner;
 		pets = new ArrayList<Pet>();
+		numeroDeMascotas = cantidadMascotas();
+		
+//		try {
+//			String msg = "";
+//			String nombreArchivo = Investor.RUTA_DATOS + Investor.SP + "SerializacionDatosPet.txt";
+//			ObjectInputStream ois = new ObjectInputStream (new FileInputStream (nombreArchivo));
+//			
+//			pets = (ArrayList) ois.readObject();
+//			ois.close();
+//			
+//		} catch(IOException e) {
+//			e.printStackTrace();
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	//METODOS GET Y SET
@@ -76,6 +85,14 @@ public class Owner {
 		this.pets = pets;
 	}
 	
+	public int getNumeroDeMascotas() {
+		return numeroDeMascotas;
+	}
+
+	public void setNumeroDeMascotas(int numeroDeMascotas) {
+		this.numeroDeMascotas = numeroDeMascotas;
+	}
+
 	//METODO TOSTRING
 
 	@Override
@@ -103,6 +120,42 @@ public class Owner {
 		public void agregarPet (Pet pet) {
 			pets.add(pet);
 		}
+		
+	//Metodo para saber cuantas mascotas tiene un dueño
+		
+		public int cantidadMascotas () {
+			int numeroMascotas = 0;
+			for(int i = 0; i < pets.size(); i++) {
+				numeroMascotas = pets.size();
+			}
+			return numeroDeMascotas;
+		}
+		
+		//
+		public void serializarPet(Pet pet) {
+			try {
+				String msg = "";
+				String nombreArchivo = Investor.RUTA_DATOS + Investor.SP + "SerializacionDatosPet.txt";
+				ObjectOutputStream oos = new ObjectOutputStream (new FileOutputStream(nombreArchivo));
+				
+				oos.writeObject(pet);
+				oos.close();
+				
+			}catch (IOException e) {
+				System.err.printf("\nExcepcion: %s\n", e);
+				System.out.println("No se ha podido guardar los datos");
+			}
+		}
+		
+		public String borrar(){
+			String msg = "";
+			for(int i = 0; i < pets.size(); i++) {
+				msg += pets.get(i).getPetName() + "\n";
+			}
+			return msg;
+		}
+		
+			
 }//Cierra la clase
 
 
