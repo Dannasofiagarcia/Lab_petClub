@@ -15,21 +15,26 @@ public class Main {
 	// RELACIONES
 
 	private Scanner lector;
-	private Investor investor;
+	private ClubManager clubManager;
 
 	// CONSTRUCTOR
 
 	public Main() {
-		investor = new Investor();
+		clubManager = new ClubManager();
 		lector = new Scanner(System.in);
 	}
 
 	public static void main(String[] args) {
 		Main interfaz = new Main();
-		interfaz.showMenu();
+		try {
+			interfaz.showMenu();
+		} catch (ExceptionOpcionIncorrecta e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	public void showMenu() {
+	public void showMenu() throws ExceptionOpcionIncorrecta {
 		int userInput = 0;
 
 		while (userInput != 11) {
@@ -58,7 +63,8 @@ public class Main {
 						String typePet = lector.nextLine();
 
 						Club club = new Club(idClub, nombreClub, dateClubs, typePet);
-						investor.addClub(club);
+						System.out.println(clubManager.addClub(club));
+						clubManager.guardarClub(club);
 
 						System.out.println("Desea registrar un dueño al club creado?");
 						System.out.println("1. Si \n 2. No");
@@ -82,7 +88,7 @@ public class Main {
 							String petTypeOwner = lector.nextLine();
 
 							Owner owner = new Owner(idOwner, nameOwner, bornDateOwner, petTypeOwner);
-							investor.agregarOwnerClubE(owner, club);
+							System.out.println(clubManager.agregarOwnerClubEspecifico(owner, club));
 							continuarCiclo = false;
 						} else {
 							continuarCiclo = false;
@@ -120,14 +126,13 @@ public class Main {
 
 						Owner owner = new Owner(idOwner, nameOwner, bornDateOwner, petTypeOwner);
 
-						System.out.println(
-								"La siguiente es una lista con el nombre de los clubs disponibles, seleccione al que desea agregar el nuevo dueño");
-						System.out.println(investor.nombreClubsDisponibles());
+						System.out.println("La siguiente es una lista con el nombre de los clubs disponibles, seleccione al que desea agregar el nuevo dueño");
+						System.out.println(clubManager.nombreClubsDisponibles());
 						String nombreClubSeleccionado = lector.nextLine();
-						investor.agregarOwnerByName(owner, nombreClubSeleccionado);
+						clubManager.agregarOwnerByName(owner, nombreClubSeleccionado);
 
 						System.out.println("Desea registrar una mascota al dueño creado?");
-						System.out.println("1. Si \n 2. No");
+						System.out.println("1. Si \n2. No");
 						int decisionPet = lector.nextInt();
 						lector.nextLine();
 
@@ -162,7 +167,7 @@ public class Main {
 							String typePet = lector.nextLine();
 
 							Pet pet = new Pet(petId, petName, bornDatePet, genero, typePet);
-							investor.agregarPetByName(owner, nombreClubSeleccionado, pet);
+							clubManager.agregarPetByName(owner, nombreClubSeleccionado, pet);
 							continuarCiclo1 = false;
 						} else {
 							continuarCiclo1 = false;
@@ -196,7 +201,7 @@ public class Main {
 						DateFormat formato1 = new SimpleDateFormat("yyyy-MM-dd");
 						Date bornDatePet = formato1.parse(bornDateString);
 
-						System.out.println("Seleccione el genero de la mascota \n 1. Femenino \n 2. Masculino");
+						System.out.println("Seleccione el genero de la mascota \n 1. Femenino \n2. Masculino");
 						int seleccionGenero = lector.nextInt();
 						lector.nextLine();
 
@@ -215,11 +220,9 @@ public class Main {
 
 						Pet pet = new Pet(petId, petName, bornDatePet, genero, typePet);
 
-						System.out.println(
-								"Los siguiente son los dueños disponibles y sus respectivos nombres. Seleccione el dueño al que desea agregarle la mascota creada");
-						System.out.println(investor.nombreDuenos());
+						System.out.println("Ingrese el nombre del dueño al que desea agregarle la mascota creada");
 						String seleccionDueno = lector.nextLine();
-						investor.agregarPetByOwner(seleccionDueno, pet);
+						System.out.println(clubManager.agregarPetByOwner(seleccionDueno, pet));
 						continuarCiclo2 = false;
 
 					} catch (ParseException e) {
@@ -232,15 +235,75 @@ public class Main {
 					}
 				} while (continuarCiclo2 == true);
 			break;
-				
+			
 			case 4:
-//				System.out.println()
+				System.out.println("Seleccione como desea eliminar el club \n1. Nombre del club\n2. Id del club");
+				int decisionEliminarClub = lector.nextInt();
+				lector.nextLine();
+				
+				if (decisionEliminarClub == 1) {
+					System.out.println("Ingrese el nombre del club que desea eliminar");
+					String nombreClubEliminar = lector.nextLine();
+					System.out.println(clubManager.eliminarClubPorNombre(nombreClubEliminar));
+				}
+				
+				else if (decisionEliminarClub == 2) {
+					System.out.println("Ingrese el id del club que desea eliminar");
+					String idClubEliminar = lector.nextLine();
+					System.out.println(clubManager.eliminarClubPorId(idClubEliminar));
+				}
+			break;
+			
+			case 5:
+				System.out.println("Seleccione como desea eliminar el dueño \n1. Nombre del dueño\n2. Id del dueño");
+				int decisionEliminarOwner = lector.nextInt();
+				lector.nextLine();
+				
+				if (decisionEliminarOwner == 1) {
+					System.out.println("Ingrese el nombre del dueño que desea eliminar");
+					String nombreDuenoEliminar = lector.nextLine();
+					System.out.println(clubManager.eliminarOwnerPorNombre(nombreDuenoEliminar));
+				}
+				
+				else if (decisionEliminarOwner == 2) {
+					System.out.println("Ingrese el id del dueño que desea eliminar");
+					String idOwnerEliminar = lector.nextLine();
+					System.out.println(clubManager.eliminarOwnerPorId(idOwnerEliminar));
+				}
+			break;
+			case 6:
+				System.out.println("Seleccione como desea eliminar la mascota \n1. Nombre de la mascota\n2. Id de la mascota");
+				int decisionEliminarMascota = lector.nextInt();
+				lector.nextLine();
+				
+				if (decisionEliminarMascota == 1) {
+					System.out.println("Ingrese el nombre de la mascota que desea eliminar");
+					String nombrePetE = lector.nextLine();
+					System.out.println(clubManager.eliminarPetPorNombre(nombrePetE));
+				}
+				
+				else if (decisionEliminarMascota == 2) {
+					System.out.println("Ingrese el id de la mascota que desea eliminar");
+					String idPetE = lector.nextLine();
+					System.out.println(clubManager.eliminarPetPorId(idPetE));
+				}
+			break;
+			
+			case 9:
+				System.out.println("Espere unos segundos, cargar los datos puede ser demorado");
+				//clubManager.cargarTodosLosDatosGenerados();
+			break;	
+				
 			}// Cierra el switch
 
-			if (userInput > 11)
-
-			{
-				// throw new ExceptionOpcionIncorrecta(userInput);
+			if (userInput > 11){
+				throw new ExceptionOpcionIncorrecta(userInput);
+			}
+			
+			if(userInput == 11) {
+				for(Club clubs : clubManager.getClubs()) {
+					clubs.serializarOwners();
+				}
 			}
 		} // Cierra el while
 
@@ -259,7 +322,5 @@ public class Main {
 		System.out.println("9. Para actualizar la información obtenida de MockData");
 		System.out.println("9. Para guardar la informacion");
 		System.out.println("11. Para salir");
-
 	}
-
 }

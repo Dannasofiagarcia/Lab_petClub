@@ -5,21 +5,21 @@ import java.text.*;
 import java.util.*;
 
 public class Owner implements Serializable {
-	
-	//ATRIBUTOS
-	
+
+	// ATRIBUTOS
+
 	private String idOwner;
 	private String nameOwner;
 	private Date bornDateOwner;
 	private String petTypeOwner;
 	private int numeroDeMascotas;
-	
-	//RELACIONES
-	
+
+	// RELACIONES
+
 	private ArrayList<Pet> pets;
-	
-	//CONSTRUCTOR
-	
+
+	// CONSTRUCTOR
+
 	public Owner(String idOwner, String nameOwner, Date bornDateOwner, String petTypeOwner) {
 		this.idOwner = idOwner;
 		this.nameOwner = nameOwner;
@@ -27,23 +27,10 @@ public class Owner implements Serializable {
 		this.petTypeOwner = petTypeOwner;
 		pets = new ArrayList<Pet>();
 		numeroDeMascotas = cantidadMascotas();
-		
-//		try {
-//			String msg = "";
-//			String nombreArchivo = Investor.RUTA_DATOS + Investor.SP + "SerializacionDatosPet.txt";
-//			ObjectInputStream ois = new ObjectInputStream (new FileInputStream (nombreArchivo));
-//			
-//			pets = (ArrayList) ois.readObject();
-//			ois.close();
-//			
-//		} catch(IOException e) {
-//			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		}
+		// cargar();
 	}
-	
-	//METODOS GET Y SET
+
+	// METODOS GET Y SET
 
 	public String getIdOwner() {
 		return idOwner;
@@ -76,7 +63,7 @@ public class Owner implements Serializable {
 	public void setPetTypeOwner(String petTypeOwner) {
 		this.petTypeOwner = petTypeOwner;
 	}
-	
+
 	public ArrayList<Pet> getPets() {
 		return pets;
 	}
@@ -84,7 +71,7 @@ public class Owner implements Serializable {
 	public void setPets(ArrayList<Pet> pets) {
 		this.pets = pets;
 	}
-	
+
 	public int getNumeroDeMascotas() {
 		return numeroDeMascotas;
 	}
@@ -93,69 +80,98 @@ public class Owner implements Serializable {
 		this.numeroDeMascotas = numeroDeMascotas;
 	}
 
-	//METODO TOSTRING
+	// METODO TOSTRING
 
 	@Override
 	public String toString() {
-		return "Owner id " + idOwner + ", name owner " + nameOwner + ", born date " + bornDateOwner
-				+ ", favorite type of pet " + petTypeOwner;
-	}	
-	
-	
-	//Metodo para verificar que las mascotas de un dueño no tengan el mismo nombre
-	
+		return idOwner + ", " + nameOwner + ", " + bornDateOwner + ", " + petTypeOwner;
+	}
+
+	// Metodo para verificar que las mascotas de un dueño no tengan el mismo nombre
+
 	public boolean verificarNombreMascotas(Pet pet) {
 		boolean nombresIguales = false;
 		for (int i = 0; i < pets.size(); i++) {
-			if(pets.get(i).getPetName().equals(pet.getPetName())) {
+			if (pets.get(i).getPetName().equals(pet.getPetName())) {
 				nombresIguales = true;
 			}
 		}
 		return nombresIguales;
 	}
-	
-	
-	//Metodo para agregar mascotas
-	
-		public void agregarPet (Pet pet) {
-			pets.add(pet);
+
+	// Metodo para agregar mascotas
+
+	public void agregarPet(Pet pet) {
+		pets.add(pet);
+	}
+
+	// Metodo para saber cuantas mascotas tiene un dueño
+
+	public int cantidadMascotas() {
+		int numeroMascotas = 0;
+		for (int i = 0; i < pets.size(); i++) {
+			numeroMascotas = pets.size();
 		}
-		
-	//Metodo para saber cuantas mascotas tiene un dueño
-		
-		public int cantidadMascotas () {
-			int numeroMascotas = 0;
-			for(int i = 0; i < pets.size(); i++) {
-				numeroMascotas = pets.size();
-			}
-			return numeroDeMascotas;
+		return numeroDeMascotas;
+	}
+
+	public boolean arregloPetsVacio() {
+		boolean vacio = false;
+		if (pets == null | pets.size() == 0) {
+			vacio = true;
 		}
-		
-		//
-		public void serializarPet(Pet pet) {
-			try {
-				String msg = "";
-				String nombreArchivo = Investor.RUTA_DATOS + Investor.SP + "SerializacionDatosPet.txt";
-				ObjectOutputStream oos = new ObjectOutputStream (new FileOutputStream(nombreArchivo));
-				
-				oos.writeObject(pet);
-				oos.close();
-				
-			}catch (IOException e) {
-				System.err.printf("\nExcepcion: %s\n", e);
-				System.out.println("No se ha podido guardar los datos");
-			}
-		}
-		
-		public String borrar(){
+		return vacio;
+	}
+
+	// Metodo para serializar las mascotas
+
+	public void serializarPet(Pet pet) {
+		try {
 			String msg = "";
-			for(int i = 0; i < pets.size(); i++) {
-				msg += pets.get(i).getPetName() + "\n";
-			}
-			return msg;
+			String nombreArchivo = ClubManager.RUTA_DATOS + ClubManager.SP + "SerializacionDatosPet.txt";
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nombreArchivo));
+
+			oos.writeObject(pet);
+			oos.close();
+
+		} catch (IOException e) {
+			System.err.printf("\nExcepcion: %s\n", e);
+			System.out.println("No se ha podido guardar los datos");
 		}
-		
-			
-}//Cierra la clase
+	}
 
+	public boolean eliminarMascotaId(String id) {
+		boolean eliminado = false;
+		for (int i = 0; i < pets.size(); i++) {
+			if (pets.get(i).getPetId().equals(id)) {
+				pets.remove(i);
+				eliminado = true;
+			}
+		}
+		return eliminado;
+	}
 
+	public boolean eliminarMascotaNombre(String nombre) {
+		boolean eliminado = false;
+		for (int i = 0; i < pets.size(); i++) {
+			if (pets.get(i).getPetName().equals(nombre)) {
+				pets.remove(i);
+				eliminado = true;
+			}
+		}
+		return eliminado;
+	}
+
+//	public void cargar() {
+//		String nombreArchivo = ClubManager.RUTA_DATOS + ClubManager.SP + "SerializacionDatosPet.txt";
+//		File file = new File(nombreArchivo);
+//		if (pets == null | pets.size() == 0) {
+//			if (file.exists()) {
+//				deserializarPet();
+//			} else {
+//				cargarDatosPetGenerados();
+//			}
+//		}
+//	}
+
+}// Cierra la clase

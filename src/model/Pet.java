@@ -74,7 +74,7 @@ public class Pet implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Pet id" + petId + ", pet name is " + petName + ", pet gender " + petGender + ", type of pet " + typePet;
+		return petId + ", " + petName + ", " + petGender + ", " + typePet;
 	}
 	
 }
