@@ -1,9 +1,10 @@
 package model;
 
 import java.io.*;
+import java.util.Comparator;
 import java.util.Date;
 
-public class Pet implements Serializable {
+public class Pet implements Serializable, Comparable<Pet>, Comparator<Pet> {
 	
 	//CONSTANTES
 	
@@ -75,6 +76,17 @@ public class Pet implements Serializable {
 	@Override
 	public String toString() {
 		return petId + ", " + petName + ", " + petGender + ", " + typePet;
+	}
+
+	@Override
+	public int compareTo(Pet o) {
+		return petName.compareTo(o.getPetName());
+	}
+
+	@Override
+	public int compare(Pet o1, Pet o2) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 }
