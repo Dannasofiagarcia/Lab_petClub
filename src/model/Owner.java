@@ -4,25 +4,23 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
-
-
 public class Owner implements Serializable, Comparable<Owner>, Comparator<Owner> {
 
 	// ATRIBUTOS
 
-	//Burbuja
+	// Burbuja
 	private String idOwner;
-	
-	//Comparable
+
+	// Comparable
 	private String nameOwner;
-	
-	//Metodo ordenamiento inserccion
+
+	// Metodo ordenamiento inserccion
 	private Date bornDateOwner;
-	
-	//Comparator
+
+	// Comparator
 	private String petTypeOwner;
-	
-	//Metodo ordenamiento seleccion
+
+	// Metodo ordenamiento seleccion
 	private int numeroDeMascotas;
 
 	// RELACIONES
@@ -97,7 +95,6 @@ public class Owner implements Serializable, Comparable<Owner>, Comparator<Owner>
 	public String toString() {
 		return idOwner + ", " + nameOwner + ", " + bornDateOwner + ", " + petTypeOwner;
 	}
-	
 
 	// Metodo para verificar que las mascotas de un dueño no tengan el mismo nombre
 
@@ -127,7 +124,6 @@ public class Owner implements Serializable, Comparable<Owner>, Comparator<Owner>
 		return numeroDeMascotas;
 	}
 
-
 	public boolean eliminarMascotaId(String id) {
 		boolean eliminado = false;
 		for (int i = 0; i < pets.size(); i++) {
@@ -149,7 +145,7 @@ public class Owner implements Serializable, Comparable<Owner>, Comparator<Owner>
 		}
 		return eliminado;
 	}
-	
+
 	public String ordenamientoBurbujaOwnerPet() {
 		String msg = "";
 		int tamanio = pets.size();
@@ -160,49 +156,39 @@ public class Owner implements Serializable, Comparable<Owner>, Comparator<Owner>
 			}
 		}
 
-		for (int i = 0; i < petsArreglo.length - 1; i++) {
-			Pet menor = petsArreglo[i];
-			int cual = i;
-			for (int j = i + 1; j < petsArreglo.length; j++) {
+		for (int i = petsArreglo.length; i > 0; i--) {
+			for (int j = 0; j < i - 1; j++) {
 				// Si es menor que 0, el primer String es menor que el segundo. Si es mayor que
 				// 0, el primer String es mayor que el segundo
-				if (petsArreglo[j].getPetId().compareToIgnoreCase(menor.getPetId()) < 0) {
-					menor = petsArreglo[j];
-					cual = j;
+				if (petsArreglo[j].getPetId().compareToIgnoreCase(petsArreglo[j + 1].getPetId()) > 0) {
+
+					Pet temp = petsArreglo[j];
+					petsArreglo[j] = petsArreglo[j + 1];
+					petsArreglo[j + 1] = temp;
 				}
 			}
-			Pet temp = petsArreglo[i];
-			petsArreglo[i] = menor;
-			petsArreglo[cual] = temp;
 		}
-		
+
 		for (int i = 0; i < petsArreglo.length; i++) {
-			msg += "     " + petsArreglo[i].getPetId() + "     "  + "     "
-					+ petsArreglo[i].getPetName() + "     " + "     " + petsArreglo[i].getBornDatePet()
-					+ "     " + "     " + petsArreglo[i].getPetGender() + "     " +  "     " + petsArreglo[i].getTypePet() + "     " + "\n";
+			msg += "     " + petsArreglo[i].getPetId() + "     " + "     " + petsArreglo[i].getPetName() + "     "
+					+ "     " + petsArreglo[i].getBornDatePet() + "     " + "     " + petsArreglo[i].getPetGender()
+					+ "     " + "     " + petsArreglo[i].getTypePet() + "     " + "\n";
 		}
 
 		return msg;
 	}
-	
+
 	public String ordenamientoCompareToNombrePet() {
 		String msg = "";
 		Collections.sort(pets);
-		msg += mostrarDatosReporteNombrePet();
-
-		return msg;
-	}
-	
-	public String mostrarDatosReporteNombrePet() {
-		String msg = "";
 		for (int i = 0; i < pets.size(); i++) {
-			msg += "     " + pets.get(i).getPetName() + "     " + "     " + pets.get(i).getPetId()
-					+ "     " + "     " + pets.get(i).getBornDatePet() + "     " +  "     " + pets.get(i).getPetGender() + "     " + "     "
+			msg += "     " + pets.get(i).getPetName() + "     " + "     " + pets.get(i).getPetId() + "     " + "     "
+					+ pets.get(i).getBornDatePet() + "     " + "     " + pets.get(i).getPetGender() + "     " + "     "
 					+ pets.get(i).getTypePet() + "     " + "\n";
 		}
 		return msg;
 	}
-	
+
 	public String ordenamientoInsercionDatePet() {
 		String msg = "";
 		int tamanio = pets.size();
@@ -220,66 +206,167 @@ public class Owner implements Serializable, Comparable<Owner>, Comparator<Owner>
 				petsArreglo[j - 1] = temp;
 			}
 		}
-		
+
 		for (int i = 0; i < petsArreglo.length; i++) {
-			msg += "     " + petsArreglo[i].getBornDatePet() + "     " + petsArreglo[i].getPetId() + "     "  + "     " + petsArreglo[i].getPetName()
-					+ "     "  + "     " + petsArreglo[i].getPetGender() + "     " + "     " + petsArreglo[i].getTypePet() + "     " + "\n";
+			msg += "     " + petsArreglo[i].getBornDatePet() + "     " + petsArreglo[i].getPetId() + "     " + "     "
+					+ petsArreglo[i].getPetName() + "     " + "     " + petsArreglo[i].getPetGender() + "     "
+					+ "     " + petsArreglo[i].getTypePet() + "     " + "\n";
 		}
 
 		return msg;
 	}
-	
-	public String ordenamientoCPPetTypePet() {
-	
-	String msg = "";
-	int tamanio = pets.size();
-	Pet [] petsArreglo = new Pet [tamanio];
-	for (int i = 0; i < pets.size(); i++) {
-		for (int j = 0; j < petsArreglo.length; j++) {
-			petsArreglo[j] = pets.get(i);
-		}
-	}
 
-	for (int i = 0; i < petsArreglo.length - 1; i++) {
-		Pet menor = petsArreglo[i];
-		int cual = i;
-		for (int j = i + 1; j < petsArreglo.length; j++) {
-			// Si es menor que 0, el primer String es menor que el segundo. Si es mayor que
-			// 0, el primer String es mayor que el segundo
-			if (petsArreglo[i].compare(petsArreglo[j],petsArreglo[i]) < 0) {
-				menor = petsArreglo[j];
-				cual = j;
+	public String ordenamientoCPPetTypePet() {
+
+		String msg = "";
+		int tamanio = pets.size();
+		Pet[] petsArreglo = new Pet[tamanio];
+		for (int i = 0; i < pets.size(); i++) {
+			for (int j = 0; j < petsArreglo.length; j++) {
+				petsArreglo[j] = pets.get(i);
 			}
 		}
-		Pet temp = petsArreglo[i];
-		petsArreglo[i] = menor;
-		petsArreglo[cual] = temp;
+
+		for (int i = 0; i < petsArreglo.length - 1; i++) {
+			Pet menor = petsArreglo[i];
+			int cual = i;
+			for (int j = i + 1; j < petsArreglo.length; j++) {
+				// Si es menor que 0, el primer String es menor que el segundo. Si es mayor que
+				// 0, el primer String es mayor que el segundo
+				if (petsArreglo[i].compare(petsArreglo[j], petsArreglo[i]) < 0) {
+					menor = petsArreglo[j];
+					cual = j;
+				}
+			}
+			Pet temp = petsArreglo[i];
+			petsArreglo[i] = menor;
+			petsArreglo[cual] = temp;
+		}
+
+		for (int i = 0; i < petsArreglo.length; i++) {
+			msg += "     " + petsArreglo[i].getTypePet() + "     " + "     " + petsArreglo[i].getPetId() + "     "
+					+ "     " + petsArreglo[i].getPetName() + "     " + "     " + petsArreglo[i].getBornDatePet()
+					+ "     " + "     " + petsArreglo[i].getPetGender() + "     " + "\n";
+		}
+
+		return msg;
+
 	}
 
-	for (int i = 0; i < petsArreglo.length; i++) {
-		msg += "     " + petsArreglo[i].getTypePet() + "     "  + "     "
-				+ petsArreglo[i].getPetId() + "     " + "     " + petsArreglo[i].getPetName()
-				+ "     " + "     " + petsArreglo[i].getBornDatePet() + "     " +  "     " + petsArreglo[i].getPetGender() + "     " + "\n";
-	}
-
-	return msg;
-
-}
-	
 	@Override
-	
+
 	public int compareTo(Owner o) {
 		return nameOwner.compareTo(o.getNameOwner());
 	}
-	
+
 	@Override
-	
+
 	public int compare(Owner o1, Owner o2) {
 		return o1.getPetTypeOwner().compareToIgnoreCase(o2.getPetTypeOwner());
 	}
+
+	public Pet busquedaBinariaPetID(String id) {
+
+		boolean encontre = false;
+		Pet encontrado = null;
+		int inicio = 0;
+		int fin = pets.size() - 1;
+		int posicion;
+
+		while (inicio <= fin && !encontre) {
+			posicion = (inicio + fin) / 2;
+
+			if (pets.get(posicion).getPetId().equals(id)) {
+				encontrado = pets.get(posicion);
+			} else if (id.compareTo(pets.get(posicion).getPetId()) > 0) {
+				inicio = posicion + 1;
+			} else {
+				fin = posicion - 1;
+			}
+		}
+		return encontrado;
+	}
 	
+	public Pet busquedaNormalPetId(String id) {
+		Pet encontrado = null;
+		boolean encontre = false;
+		for(int i = 0; i < pets.size() && !encontre; i++) {
+			if(pets.get(i).getPetId().equals(id)) {
+				encontrado = pets.get(i);
+				encontre = true;
+			}
+		}
+		return encontrado;
+	}
 	
-		
+	public Pet busquedaBinariaPetNombre(String nombre) {
+
+		boolean encontre = false;
+		Pet encontrado = null;
+		int inicio = 0;
+		int fin = pets.size() - 1;
+		int posicion;
+
+		while (inicio <= fin && !encontre) {
+			posicion = (inicio + fin) / 2;
+
+			if (pets.get(posicion).getPetName().equals(nombre)) {
+				encontrado = pets.get(posicion);
+			} else if (nombre.compareTo(pets.get(posicion).getPetName()) > 0) {
+				inicio = posicion + 1;
+			} else {
+				fin = posicion - 1;
+			}
+		}
+		return encontrado;
+	}
+	
+	public Pet busquedaNormalPetNombre(String nombre) {
+		Pet encontrado = null;
+		boolean encontre = false;
+		for(int i = 0; i < pets.size() && !encontre; i++) {
+			if(pets.get(i).getPetName().equals(nombre)) {
+				encontrado = pets.get(i);
+				encontre = true;
+			}
+		}
+		return encontrado;
+	}
+	
+	public Pet busquedaBinariaPetType(String petType) {
+
+		boolean encontre = false;
+		Pet encontrado = null;
+		int inicio = 0;
+		int fin = pets.size() - 1;
+		int posicion;
+
+		while (inicio <= fin && !encontre) {
+			posicion = (inicio + fin) / 2;
+
+			if (pets.get(posicion).getTypePet().equals(petType)) {
+				encontrado = pets.get(posicion);
+			} else if (petType.compareTo(pets.get(posicion).getTypePet()) > 0) {
+				inicio = posicion + 1;
+			} else {
+				fin = posicion - 1;
+			}
+		}
+		return encontrado;
+	}
+	
+	public Pet busquedaNormalPetType(String petType) {
+		Pet encontrado = null;
+		boolean encontre = false;
+		for(int i = 0; i < pets.size() && !encontre; i++) {
+			if(pets.get(i).getTypePet().equals(petType)) {
+				encontrado = pets.get(i);
+				encontre = true;
+			}
+		}
+		return encontrado;
+	}
+
 //	public void cargar() {
 //		String nombreArchivo = ClubManager.RUTA_DATOS + ClubManager.SP + "SerializacionDatosPet.txt";
 //		File file = new File(nombreArchivo);

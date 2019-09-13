@@ -117,8 +117,8 @@ public class Main {
 						System.out.println("Ingrese el nombre del dueño que desea agregar");
 						String nameOwner = lector.nextLine();
 
-						System.out
-								.println("Ingrese la fecha de nacimiento del dueño en el siguiente formato mes/dia/año");
+						System.out.println(
+								"Ingrese la fecha de nacimiento del dueño en el siguiente formato mes/dia/año");
 						String bornDateOwnerString = lector.nextLine();
 						DateFormat formato1 = new SimpleDateFormat("MM/dd/yyyy");
 						Date bornDateOwner = formato1.parse(bornDateOwnerString);
@@ -147,7 +147,8 @@ public class Main {
 							System.out.println("Ingrese el nombre de la mascota que desea agregar");
 							String petName = lector.nextLine();
 
-							System.out.println("Ingrese la fecha de nacimiento de la mascota que desea agregar en el siguiente formato mes/dia/año");
+							System.out.println(
+									"Ingrese la fecha de nacimiento de la mascota que desea agregar en el siguiente formato mes/dia/año");
 							String bornDateString = lector.nextLine();
 							DateFormat formato2 = new SimpleDateFormat("MM/dd/yyyy");
 							Date bornDatePet = formato2.parse(bornDateString);
@@ -296,7 +297,7 @@ public class Main {
 
 			case 7:
 				boolean continuar = true;
-				do {					
+				do {
 					System.out.println("El reporte se realiza ordenando los datos segun el criterio que escoja");
 					System.out.println("Seleccione en que clase desea realizar el reporte");
 					System.out.println("1. Clubs\n2.Dueños\n3.Mascotas");
@@ -355,8 +356,7 @@ public class Main {
 
 					} else if (decisionOrdenamiento == 3) {
 						System.out.println("Seleccione el criterio por el que desea ordenar las mascotas");
-						System.out.println(
-								"1.Id\n2.Nombre\n3.Fecha nacimiento\n4.Tipo de mascota");
+						System.out.println("1.Id\n2.Nombre\n3.Fecha nacimiento\n4.Tipo de mascota");
 						int decisionOrdenamientoPets = lector.nextInt();
 						lector.nextLine();
 
@@ -384,10 +384,82 @@ public class Main {
 
 				break;
 
+			case 8:
+				System.out.println("Seleccione en que clase desea buscar");
+				System.out.println("1. Clubs\n2.Dueños\n3.Mascotas");
+				int decisionBusqueda = lector.nextInt();
+				lector.nextLine();
+
+				if (decisionBusqueda == 1) {
+					System.out.println("Seleccione el criterio por el que desea buscar los clubs");
+					System.out.println("1. Id\n2. Nombre\n3. Tipo de mascota favorito");
+					int decisionBusquedaClubs = lector.nextInt();
+					lector.nextLine();
+
+					if (decisionBusquedaClubs == 1) {
+						System.out.println("Ingrese el ID del club que desea buscar");
+						String id = lector.nextLine();
+						clubManager.busquedaClub(id, 1);
+					}
+					if (decisionBusquedaClubs == 2) {
+						System.out.println("Ingrese el nombre del club que desea buscar");
+						String nombre = lector.nextLine();
+						clubManager.busquedaClub(nombre, 2);
+					}
+					if (decisionBusquedaClubs == 3) {
+						System.out.println("Ingrese el tipo de mascota favorita del club que desea buscar");
+						String petType = lector.nextLine();
+						clubManager.busquedaClub(petType, 1);
+					}
+				} else if (decisionBusqueda == 2) {
+					System.out.println("Seleccione el criterio por el que desea buscar los dueños");
+					System.out.println("1. Id\n2. Nombre\n3. Tipo de mascota favorito");
+					int decisionBusquedaOwners = lector.nextInt();
+					lector.nextLine();
+					if (decisionBusquedaOwners == 1) {
+						System.out.println("Ingrese el ID del dueño que desea buscar");
+						String id = lector.nextLine();
+						clubManager.busquedaOwner(id, 1);
+					}
+					if (decisionBusquedaOwners == 2) {
+						System.out.println("Ingrese el nombre del dueño que desea buscar");
+						String nombre = lector.nextLine();
+						clubManager.busquedaOwner(nombre, 2);
+					}
+					if (decisionBusquedaOwners == 3) {
+						System.out.println("Ingrese el tipo de mascota favorita del dueño que desea buscar");
+						String petType = lector.nextLine();
+						clubManager.busquedaOwner(petType, 1);
+					}
+				} else if (decisionBusqueda == 3) {
+					System.out.println("Seleccione el criterio por el que desea ordenar las mascotas");
+					System.out.println("1.Id\n2.Nombre\n3.Tipo de mascota");
+					int decisionBusquedaPets = lector.nextInt();
+					lector.nextLine();
+
+					if (decisionBusquedaPets == 1) {
+						System.out.println("Ingrese el ID de la mascota que desea buscar");
+						String id = lector.nextLine();
+						clubManager.busquedaPet(id, 1);
+					}
+					if (decisionBusquedaPets == 2) {
+						System.out.println("Ingrese el nombre de la mascota que desea buscar");
+						String nombre = lector.nextLine();
+						clubManager.busquedaPet(nombre, 2);
+					}
+					if (decisionBusquedaPets == 3) {
+						System.out.println("Ingrese el tipo de mascota que desea buscar");
+						String petType = lector.nextLine();
+						clubManager.busquedaPet(petType, 1);
+					}
+				}
+
+				break;
+				
 			case 9:
 				clubManager.cargarTodosLosDatosGenerados();
 				System.out.println("Datos actualizados");
-			
+
 				break;
 
 			}// Cierra el switch

@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.text.ParseException;
 
 public class Club implements Comparable<Club>, Comparator<Club>{
 
@@ -42,7 +41,7 @@ public class Club implements Comparable<Club>, Comparator<Club>{
 		this.petTypeClub = petTypeClub;
 		clubOwners = new ArrayList<Owner>();
 		cantidadDuenos = cantidadDuenosClub();
-	//	deserializar();
+		deserializar();
 
 	}
 
@@ -242,26 +241,26 @@ public class Club implements Comparable<Club>, Comparator<Club>{
 		return eliminado;
 	}
 	
-//	//Metodo para deserializar las mascotas y los dueños
-//
-//	public void deserializar() {
-//		try {
-//			ArrayList<Owner> owners;
-//			String msg = "";
-//			String nombreArchivo = ClubManager.RUTA_ALMACENAMIENTO + ClubManager.SP + "SerializacionDatosOwner.txt";
-//			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nombreArchivo));
-//
-//			owners =  (ArrayList<Owner>) ois.readObject();
-//			setClubOwners(owners);
-//			
-//			ois.close();
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	//Metodo para deserializar las mascotas y los dueños
+
+	public void deserializar() {
+		try {
+			ArrayList<Owner> owners;
+			String msg = "";
+			String nombreArchivo = ClubManager.RUTA_ALMACENAMIENTO + ClubManager.SP + "SerializacionDatosOwner.txt";
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nombreArchivo));
+
+			owners =  (ArrayList<Owner>) ois.readObject();
+			setClubOwners(owners);
+			
+			ois.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	//Metodo para ordenar los dueños por medio del ID utilizando el metodo de burbuja
 
@@ -311,8 +310,11 @@ public class Club implements Comparable<Club>, Comparator<Club>{
 	public String ordenamientoCompareToNombreOwner() {
 		String msg = "";
 		Collections.sort(clubOwners);
-		msg += mostrarDatosReporteDuenosNombre();
-
+		for (int i = 0; i < clubOwners.size(); i++) {
+			msg += "     " + clubOwners.get(i).getNameOwner() + "     " + "     " + clubOwners.get(i).getIdOwner()
+					+ "     " + "     " + clubOwners.get(i).getBornDateOwner() + "     " + "     "
+					+ clubOwners.get(i).getPetTypeOwner() + "     " + "\n";
+		}
 		return msg;
 	}
 	
@@ -419,6 +421,156 @@ public class Club implements Comparable<Club>, Comparator<Club>{
 			cantidad++;
 		}
 		return cantidad;
+	}
+	
+	public Owner busquedaBinariaOwnerId(String id) {
+		boolean encontre = false;
+		Owner encontrado = null;
+		int inicio = 0;
+		int fin = clubOwners.size() - 1;
+		int posicion;
+
+		while (inicio <= fin && !encontre) {
+			posicion = (inicio + fin) / 2;
+
+			if (clubOwners.get(posicion).getIdOwner().equals(id)) {
+				encontrado = clubOwners.get(posicion);
+				encontre = true;
+			} else if (id.compareTo(clubOwners.get(posicion).getIdOwner()) > 0) {
+				inicio = posicion + 1;
+			} else {
+				fin = posicion - 1;
+			}
+		}
+		return encontrado;
+	}
+	
+	public Owner busquedaNormalOwnerId(String id) {
+		Owner encontrado = null;
+		boolean encontre = false;
+		for(int i = 0; i < clubOwners.size() && !encontre; i++) {
+			if(clubOwners.get(i).getIdOwner().equals(id)) {
+				encontrado = clubOwners.get(i);
+				encontre = true;
+			}
+		}
+		return encontrado;
+	}
+	
+	public Owner busquedaBinariaOwnerNombre(String nombre) {
+		boolean encontre = false;
+		Owner encontrado = null;
+		int inicio = 0;
+		int fin = clubOwners.size() - 1;
+		int posicion;
+
+		while (inicio <= fin && !encontre) {
+			posicion = (inicio + fin) / 2;
+
+			if (clubOwners.get(posicion).getIdOwner().equals(nombre)) {
+				encontrado = clubOwners.get(posicion);
+			} else if (nombre.compareTo(clubOwners.get(posicion).getNameOwner()) > 0) {
+				inicio = posicion + 1;
+			} else {
+				fin = posicion - 1;
+			}
+		}
+		return encontrado;
+	}
+	
+	public Owner busquedaNormalOwnerNombre(String nombre) {
+		Owner encontrado = null;
+		boolean encontre = false;
+		for(int i = 0; i < clubOwners.size() && !encontre; i++) {
+			if(clubOwners.get(i).getNameOwner().equals(nombre)) {
+				encontrado = clubOwners.get(i);
+				encontre = true;
+			}
+		}
+		return encontrado;
+	}
+	
+	public Owner busquedaBinariaOwnerPetType(String petType) {
+		boolean encontre = false;
+		Owner encontrado = null;
+		int inicio = 0;
+		int fin = clubOwners.size() - 1;
+		int posicion;
+
+		while (inicio <= fin && !encontre) {
+			posicion = (inicio + fin) / 2;
+
+			if (clubOwners.get(posicion).getPetTypeOwner().equals(petType)) {
+				encontrado = clubOwners.get(posicion);
+				encontre = true;
+			} else if (petType.compareTo(clubOwners.get(posicion).getPetTypeOwner()) > 0) {
+				inicio = posicion + 1;
+			} else {
+				fin = posicion - 1;
+			}
+		}
+		return encontrado;
+	}
+	
+	public Owner busquedaNormalOwnerPetType(String petType) {
+		Owner encontrado = null;
+		boolean encontre = false;
+		for(int i = 0; i < clubOwners.size() && !encontre; i++) {
+			if(clubOwners.get(i).getPetTypeOwner().equals(petType)) {
+				encontrado = clubOwners.get(i);
+				encontre = true;
+			}
+		}
+		return encontrado;
+	}
+	
+	public Pet busquedaBinariaPetID(String id) {
+		Pet pet = null;
+		for(int i = 0; i < clubOwners.size(); i++) {
+			pet = clubOwners.get(i).busquedaBinariaPetID(id);
+		}
+		return pet;
+	}
+	
+	public Pet busquedaNormalPetID(String id) {
+		Pet pet = null;
+		for(int i = 0; i < clubOwners.size(); i++) {
+			pet = clubOwners.get(i).busquedaNormalPetId(id);
+		}
+		return pet;
+	}
+	
+	
+	public Pet busquedaBinariaPetNombre(String nombre) {
+		Pet pet = null;
+		for(int i = 0; i < clubOwners.size(); i++) {
+			pet = clubOwners.get(i).busquedaBinariaPetNombre(nombre);
+		}
+		return pet;
+	}
+	
+	public Pet busquedaNormalPetNombre(String nombre) {
+		Pet pet = null;
+		for(int i = 0; i < clubOwners.size(); i++) {
+			pet = clubOwners.get(i).busquedaNormalPetNombre(nombre);
+		}
+		return pet;
+	}
+	
+	public Pet busquedaBinariaPetType(String petType) {
+		Pet pet = null;
+		for(int i = 0; i < clubOwners.size(); i++) {
+			pet = clubOwners.get(i).busquedaBinariaPetType(petType);
+		}
+		return pet;
+	}
+	
+	public Pet busquedaNormalPetType(String petType) {
+		Pet pet = null;
+		for(int i = 0; i < clubOwners.size(); i++) {
+			pet = clubOwners.get(i).busquedaNormalPetType(petType);
+		}
+		return pet;
 	}
 
 

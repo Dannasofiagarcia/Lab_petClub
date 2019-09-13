@@ -28,9 +28,8 @@ public class ClubManager {
 	public ClubManager() {
 		clubs = new ArrayList<Club>();
 		cargar();
-		deserializar();
-		//cargarDatosPetGenerados();
-		//cargarDatosOwnerGenerados();
+		cargarDatosPetGenerados();
+		cargarDatosOwnerGenerados();
 	}
 
 	// METODOS
@@ -809,7 +808,7 @@ public class ClubManager {
 
 		for (int i = 1; i < clubsArreglo.length; i++) {
 			for (int j = i; j > 0
-					&& clubsArreglo[j - 1].getDateCreation().after(clubsArreglo[j].getDateCreation()); j--) {
+					&& clubsArreglo[j - 1].getDateCreation().before(clubsArreglo[j].getDateCreation()); j--) {
 				Club temp = clubsArreglo[j];
 				clubsArreglo[j] = clubsArreglo[j - 1];
 				clubsArreglo[j - 1] = temp;
@@ -948,32 +947,20 @@ public class ClubManager {
 			clubsArreglo[j] = clubs.get(j);
 		}
 
-		
-		for(int i = 0; i < clubsArreglo.length - 1; i++) {
+		for (int i = 0; i < clubsArreglo.length - 1; i++) {
 			Club menor = clubsArreglo[i];
 			int cual = i;
-			for(int j = i + 1; j < clubsArreglo.length; j++) {
-				if(clubsArreglo[j].getCantidadDuenos() < menor.getCantidadDuenos()) {
+			for (int j = i + 1; j < clubsArreglo.length; j++) {
+				if (clubsArreglo[j].getCantidadDuenos() < menor.getCantidadDuenos()) {
 					menor = clubsArreglo[j];
 					cual = j;
 				}
 			}
 			Club temp = clubsArreglo[i];
 			clubsArreglo[i] = menor;
-			clubsArreglo [cual] = temp;
+			clubsArreglo[cual] = temp;
 
 		}
-//		for (int i = clubsArreglo.length; i > 0; i--) {
-//			for (int j = 0; j < i - 1; j++) {
-//				// Si es menor que 0, el primer String es menor que el segundo. Si es mayor que
-//				// 0, el primer String es mayor que el segundo
-//				if (clubsArreglo[j].getCantidadDuenos() > clubsArreglo[i].getCantidadDuenos()) {
-//					Club temp = clubsArreglo[j];
-//					clubsArreglo[j] = clubsArreglo[j + 1];
-//					clubsArreglo[j + 1] = temp;
-//				}
-//			}
-//		}
 
 		msg = "                                        Datos ordenados por cantidad de dueños                              \n";
 		msg += "     CANTIDAD DE DUEÑOS     " + "     ID CLUB     " + "     NOMBRE CLUB     "
@@ -988,30 +975,440 @@ public class ClubManager {
 
 		return msg;
 	}
+
+	public String busquedaOwner(String valor, int opcion) {
+
+		long tiempoBinario = 0;
+		long tiempoNormal = 0;
+		long tiempoGastadoBinario = 0;
+		long tiempoGastadoNormal = 0;
+		long terminoBinario = 0;
+		long terminoNormal = 0;
+		String msg = "";
+		// opcion 1 es el ID
+		if (opcion == 1) {
+			tiempoBinario = System.currentTimeMillis();
+			msg = busquedaBinariaOwnerId(valor);
+			terminoBinario = System.currentTimeMillis();
+			tiempoGastadoBinario = terminoBinario - tiempoBinario;
+
+			tiempoNormal = 0;
+			tiempoNormal = System.currentTimeMillis();
+			busquedaNormalOwnerId(valor);
+			terminoNormal = System.currentTimeMillis();
+			tiempoGastadoNormal = terminoNormal - tiempoNormal;
+			msg += "El tiempo que demoro la busqueda binaria fue de " + tiempoGastadoBinario + "\n"
+					+ "El tiempo que demoro la busqueda normal fue de " + tiempoGastadoNormal;
+		}
+		//opcion 2 es el nombre
+		else if (opcion == 2) {
+			tiempoBinario = System.currentTimeMillis();
+			msg = busquedaBinariaOwnerNombre(valor);
+			terminoBinario = System.currentTimeMillis();
+			tiempoGastadoBinario = terminoBinario - tiempoBinario;
+
+			tiempoNormal = 0;
+			tiempoNormal = System.currentTimeMillis();
+			busquedaNormalOwnerNombre(valor);
+			terminoNormal = System.currentTimeMillis();
+			tiempoGastadoNormal = terminoNormal - tiempoNormal;
+			msg += "El tiempo que demoro la busqueda binaria fue de " + tiempoGastadoBinario + "\n"
+					+ "El tiempo que demoro la busqueda normal fue de " + tiempoGastadoNormal;
+		}
+		//Opcion 3 es tipo de mascota favorito
+		else if(opcion == 3) {
+			tiempoBinario = System.currentTimeMillis();
+			msg = busquedaBinariaOwnerPetType(valor);
+			terminoBinario = System.currentTimeMillis();
+			tiempoGastadoBinario = terminoBinario - tiempoBinario;
+
+			tiempoNormal = 0;
+			tiempoNormal = System.currentTimeMillis();
+			busquedaNormalOwnerPetType(valor);
+			terminoNormal = System.currentTimeMillis();
+			tiempoGastadoNormal = terminoNormal - tiempoNormal;
+			msg += "El tiempo que demoro la busqueda binaria fue de " + tiempoGastadoBinario + "\n"
+					+ "El tiempo que demoro la busqueda normal fue de " + tiempoGastadoNormal;
+		}
+		return msg;
+	}
+
+	public String busquedaBinariaOwnerId(String id) {
+		String msg = "";
+		ordenamientoBurbujaOwnerID();
+		Owner owner = null;
+
+		for (int i = 0; i < clubs.size(); i++) {
+			owner = clubs.get(i).busquedaBinariaOwnerId(id);
+		}
+		msg = "El nombre del dueño buscado es " + owner.getNameOwner() + " el ID es " + owner.getIdOwner()
+				+ " la fecha de nacimiento es " + owner.getBornDateOwner() + " el tipo de mascota favorito es "
+				+ owner.getPetTypeOwner();
+		return msg;
+	}
+
+	public void busquedaNormalOwnerId(String id) {
+		String msg = "";
+		ordenamientoBurbujaOwnerID();
+		Owner owner = null;
+
+		for (int i = 0; i < clubs.size(); i++) {
+			owner = clubs.get(i).busquedaNormalOwnerId(id);
+		}
+	}
+
+	public String busquedaBinariaOwnerNombre(String nombre) {
+		String msg = "";
+		ordenamientoCTOwnerName();
+		Owner owner = null;
+
+		for (int i = 0; i < clubs.size(); i++) {
+			owner = clubs.get(i).busquedaBinariaOwnerId(nombre);
+		}
+		msg = "El nombre del dueño buscado es " + owner.getNameOwner() + " el ID es " + owner.getIdOwner()
+				+ " la fecha de nacimiento es " + owner.getBornDateOwner() + " el tipo de mascota favorito es "
+				+ owner.getPetTypeOwner();
+		return msg;
+	}
 	
-	//Metodo para deserializar las mascotas y los dueños
+	public void busquedaNormalOwnerNombre(String nombre) {
+		ordenamientoCTOwnerName();
+		Owner owner = null;
 
-		public void deserializar() {
-			try {
-				ArrayList<Owner> owners;
-				String msg = "";
-				String nombreArchivo = ClubManager.RUTA_ALMACENAMIENTO + ClubManager.SP + "SerializacionDatosOwner.txt";
-				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nombreArchivo));
+		for (int i = 0; i < clubs.size(); i++) {
+			owner = clubs.get(i).busquedaNormalOwnerNombre(nombre);
+		}
+	}
+	
+	public String busquedaBinariaOwnerPetType(String petType) {
+		String msg = "";
+		ordenamientoBurbujaCTypePetOwner();
+		Owner owner = null;
 
-				owners =  (ArrayList<Owner>) ois.readObject();
-				for(int i = 0; i < clubs.size(); i++) {
-					for(int j = 0; j < owners.size(); j++) {
-						clubs.get(i).agregarDueno(owners.get(j));
-					}
-				}
-				
-				ois.close();
+		for (int i = 0; i < clubs.size(); i++) {
+			owner = clubs.get(i).busquedaBinariaOwnerPetType(petType);
+		}
+		msg = "El nombre del dueño buscado es " + owner.getNameOwner() + " el ID es " + owner.getIdOwner()
+				+ " la fecha de nacimiento es " + owner.getBornDateOwner() + " el tipo de mascota favorito es "
+				+ owner.getPetTypeOwner();
+		return msg;
+	}
+	
+	public void busquedaNormalOwnerPetType(String petType) {
+		ordenamientoBurbujaCTypePetOwner();
+		Owner owner = null;
 
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+		for (int i = 0; i < clubs.size(); i++) {
+			owner = clubs.get(i).busquedaNormalOwnerPetType(petType);
+		}
+	}
+	
+	public String busquedaPet(String valor, int opcion) {
+
+		long tiempoBinario = 0;
+		long tiempoNormal = 0;
+		long tiempoGastadoBinario = 0;
+		long tiempoGastadoNormal = 0;
+		long terminoBinario = 0;
+		long terminoNormal = 0;
+		String msg = "";
+		// opcion 1 es el ID
+		if (opcion == 1) {
+			tiempoBinario = System.currentTimeMillis();
+			msg = busquedaBinariaPetId(valor);
+			terminoBinario = System.currentTimeMillis();
+			tiempoGastadoBinario = terminoBinario - tiempoBinario;
+
+			tiempoNormal = 0;
+			tiempoNormal = System.currentTimeMillis();
+			busquedaNormalPetId(valor);
+			terminoNormal = System.currentTimeMillis();
+			tiempoGastadoNormal = terminoNormal - tiempoNormal;
+			msg += "El tiempo que demoro la busqueda binaria fue de " + tiempoGastadoBinario + "\n"
+					+ "El tiempo que demoro la busqueda normal fue de " + tiempoGastadoNormal;
+		}
+		//opcion 2 es el nombre
+		else if (opcion == 2) {
+			tiempoBinario = System.currentTimeMillis();
+			msg = busquedaBinariaPetNombre(valor);
+			terminoBinario = System.currentTimeMillis();
+			tiempoGastadoBinario = terminoBinario - tiempoBinario;
+
+			tiempoNormal = 0;
+			tiempoNormal = System.currentTimeMillis();
+			busquedaNormalPetNombre(valor);
+			terminoNormal = System.currentTimeMillis();
+			tiempoGastadoNormal = terminoNormal - tiempoNormal;
+			msg += "El tiempo que demoro la busqueda binaria fue de " + tiempoGastadoBinario + "\n"
+					+ "El tiempo que demoro la busqueda normal fue de " + tiempoGastadoNormal;
+		}
+		//Opcion 3 es tipo de mascota favorito
+		else if(opcion == 3) {
+			tiempoBinario = System.currentTimeMillis();
+			msg = busquedaBinariaPetType(valor);
+			terminoBinario = System.currentTimeMillis();
+			tiempoGastadoBinario = terminoBinario - tiempoBinario;
+
+			tiempoNormal = 0;
+			tiempoNormal = System.currentTimeMillis();
+			busquedaNormalPetType(valor);
+			terminoNormal = System.currentTimeMillis();
+			tiempoGastadoNormal = terminoNormal - tiempoNormal;
+			msg += "El tiempo que demoro la busqueda binaria fue de " + tiempoGastadoBinario + "\n"
+					+ "El tiempo que demoro la busqueda normal fue de " + tiempoGastadoNormal;
+		}
+		return msg;
+	}
+	
+	public String busquedaBinariaPetId(String id) {
+		String msg = "";
+		ordenamientoBurbujaPetId();
+		Pet pet = null;
+
+		for (int i = 0; i < clubs.size(); i++) {
+			pet = clubs.get(i).busquedaBinariaPetID(id);
+		}
+		msg = "El nombre de la mascota buscada es " + pet.getPetName() + " el ID es " + pet.getPetId()
+				+ " la fecha de nacimiento es " + pet.getBornDatePet() + " el tipo de mascota favorito es "
+				+ pet.getTypePet();
+		return msg;
+	}
+	
+	public void busquedaNormalPetId(String id) {
+		ordenamientoBurbujaPetId();
+		Pet pet = null;
+
+		for (int i = 0; i < clubs.size(); i++) {
+			pet = clubs.get(i).busquedaNormalPetID(id);
+		}
+	}
+	
+	public String busquedaBinariaPetNombre(String nombre) {
+		String msg = "";
+		ordenamientoCTnombrePet();
+		Pet pet = null;
+
+		for (int i = 0; i < clubs.size(); i++) {
+			pet = clubs.get(i).busquedaBinariaPetNombre(nombre);
+		}
+		msg = "El nombre de la mascota buscada es " + pet.getPetName() + " el ID es " + pet.getPetId()
+				+ " la fecha de nacimiento es " + pet.getBornDatePet() + " el tipo de mascota favorito es "
+				+ pet.getTypePet();
+		return msg;
+	}
+	
+	public void busquedaNormalPetNombre(String nombre) {
+		ordenamientoCTnombrePet();
+		Pet pet = null;
+
+		for (int i = 0; i < clubs.size(); i++) {
+			pet = clubs.get(i).busquedaNormalPetNombre(nombre);
+		}
+	}
+	
+	public String busquedaBinariaPetType(String petType) {
+		String msg = "";
+		ordenamientoCCPetTypePet();
+		Pet pet = null;
+
+		for (int i = 0; i < clubs.size(); i++) {
+			pet = clubs.get(i).busquedaBinariaPetType(petType);
+		}
+		msg = "El nombre de la mascota buscada es " + pet.getPetName() + " el ID es " + pet.getPetId()
+				+ " la fecha de nacimiento es " + pet.getBornDatePet() + " el tipo de mascota favorito es "
+				+ pet.getTypePet();
+		return msg;
+	}
+	
+	public void busquedaNormalPetType(String petType) {
+		ordenamientoCTnombrePet();
+		Pet pet = null;
+
+		for (int i = 0; i < clubs.size(); i++) {
+			pet = clubs.get(i).busquedaNormalPetType(petType);
+		}
+	}
+	
+	public String busquedaClub(String valor, int opcion) {
+
+		long tiempoBinario = 0;
+		long tiempoNormal = 0;
+		long tiempoGastadoBinario = 0;
+		long tiempoGastadoNormal = 0;
+		long terminoBinario = 0;
+		long terminoNormal = 0;
+		String msg = "";
+		// opcion 1 es el ID
+		if (opcion == 1) {
+			tiempoBinario = System.currentTimeMillis();
+			msg = busquedaBinariaClubId(valor);
+			terminoBinario = System.currentTimeMillis();
+			tiempoGastadoBinario = terminoBinario - tiempoBinario;
+
+			tiempoNormal = 0;
+			tiempoNormal = System.currentTimeMillis();
+			busquedaNormalPetId(valor);
+			terminoNormal = System.currentTimeMillis();
+			tiempoGastadoNormal = terminoNormal - tiempoNormal;
+			msg += "El tiempo que demoro la busqueda binaria fue de " + tiempoGastadoBinario + "\n"
+					+ "El tiempo que demoro la busqueda normal fue de " + tiempoGastadoNormal;
+		}
+		//opcion 2 es el nombre
+		else if (opcion == 2) {
+			tiempoBinario = System.currentTimeMillis();
+			msg = busquedaBinariaClubNombre(valor);
+			terminoBinario = System.currentTimeMillis();
+			tiempoGastadoBinario = terminoBinario - tiempoBinario;
+
+			tiempoNormal = 0;
+			tiempoNormal = System.currentTimeMillis();
+			busquedaNormalClubId(valor);
+			terminoNormal = System.currentTimeMillis();
+			tiempoGastadoNormal = terminoNormal - tiempoNormal;
+			msg += "El tiempo que demoro la busqueda binaria fue de " + tiempoGastadoBinario + "\n"
+					+ "El tiempo que demoro la busqueda normal fue de " + tiempoGastadoNormal;
+		}
+		//Opcion 3 es tipo de mascota favorito
+		else if(opcion == 3) {
+			tiempoBinario = System.currentTimeMillis();
+			msg = busquedaBinariaClubPetType(valor);
+			terminoBinario = System.currentTimeMillis();
+			tiempoGastadoBinario = terminoBinario - tiempoBinario;
+
+			tiempoNormal = 0;
+			tiempoNormal = System.currentTimeMillis();
+			busquedaNormalClubPetType(valor);
+			terminoNormal = System.currentTimeMillis();
+			tiempoGastadoNormal = terminoNormal - tiempoNormal;
+			msg += "El tiempo que demoro la busqueda binaria fue de " + tiempoGastadoBinario + "\n"
+					+ "El tiempo que demoro la busqueda normal fue de " + tiempoGastadoNormal;
+		}
+		return msg;
+	}
+	
+	public String busquedaBinariaClubPetType(String petType) {
+		String msg = "";
+		ordenamientoCTypePetClub();
+		boolean encontre = false;
+		Club encontrado = null;
+		int inicio = 0;
+		int fin = clubs.size() - 1;
+		int posicion;
+
+		while (inicio <= fin && !encontre) {
+			posicion = (inicio + fin) / 2;
+
+			if (clubs.get(posicion).getpetTypeClub().equals(petType)) {
+				encontrado = clubs.get(posicion);
+				encontre = true;
+			} else if (petType.compareTo(clubs.get(posicion).getpetTypeClub()) > 0) {
+				inicio = posicion + 1;
+			} else {
+				fin = posicion - 1;
 			}
 		}
+		
+		msg = "El nombre de la mascota buscada es " + encontrado.getClubName() + " el ID es " + encontrado.getIdClub()
+		+ " la fecha de nacimiento es " + encontrado.getDateCreation() + " el tipo de mascota favorito es "
+		+ encontrado.getpetTypeClub();
+		return msg;
+	}
+	
+	public Club busquedaNormalClubPetType(String petType) {
+		ordenamientoCTypePetClub();
+		Club encontrado = null;
+		boolean encontre = false;
+		for(int i = 0; i < clubs.size() && !encontre; i++) {
+			if(clubs.get(i).getpetTypeClub().equals(petType)) {
+				encontrado = clubs.get(i);
+				encontre = true;
+			}
+		}
+		return encontrado;
+	}
+	
+	public String busquedaBinariaClubId(String id) {
+		String msg = "";
+		ordenamientoBurbujaIdClub();
+		boolean encontre = false;
+		Club encontrado = null;
+		int inicio = 0;
+		int fin = clubs.size() - 1;
+		int posicion;
+
+		while (inicio <= fin && !encontre) {
+			posicion = (inicio + fin) / 2;
+
+			if (clubs.get(posicion).getIdClub().equals(id)) {
+				encontrado = clubs.get(posicion);
+				encontre = true;
+			} else if (id.compareTo(clubs.get(posicion).getIdClub()) > 0) {
+				inicio = posicion + 1;
+			} else {
+				fin = posicion - 1;
+			}
+		}
+
+		msg = "El nombre de la mascota buscada es " + encontrado.getClubName() + " el ID es " + encontrado.getIdClub()
+		+ " la fecha de nacimiento es " + encontrado.getDateCreation() + " el tipo de mascota favorito es "
+		+ encontrado.getpetTypeClub();
+		return msg;
+	}
+	
+	public Club busquedaNormalClubId(String id) {
+		ordenamientoBurbujaIdClub();
+		Club encontrado = null;
+		boolean encontre = false;
+		for(int i = 0; i < clubs.size() && !encontre; i++) {
+			if(clubs.get(i).getIdClub().equals(id)) {
+				encontrado = clubs.get(i);
+				encontre = true;
+			}
+		}
+		return encontrado;
+	}
+	
+	public String busquedaBinariaClubNombre(String nombre) {
+		String msg = "";
+		ordenamientoBurbujaIdClub();
+		boolean encontre = false;
+		Club encontrado = null;
+		int inicio = 0;
+		int fin = clubs.size() - 1;
+		int posicion;
+
+		while (inicio <= fin && !encontre) {
+			posicion = (inicio + fin) / 2;
+
+			if (clubs.get(posicion).getClubName().equals(nombre)) {
+				encontrado = clubs.get(posicion);
+				encontre = true;
+			} else if (nombre.compareTo(clubs.get(posicion).getClubName()) > 0) {
+				inicio = posicion + 1;
+			} else {
+				fin = posicion - 1;
+			}
+		}
+
+		msg = "El nombre de la mascota buscada es " + encontrado.getClubName() + " el ID es " + encontrado.getIdClub()
+		+ " la fecha de nacimiento es " + encontrado.getDateCreation() + " el tipo de mascota favorito es "
+		+ encontrado.getpetTypeClub();
+		return msg;
+	}
+	
+	public Club busquedaNormalClubNombre(String nombre) {
+		ordenamientoBurbujaIdClub();
+		Club encontrado = null;
+		boolean encontre = false;
+		for(int i = 0; i < clubs.size() && !encontre; i++) {
+			if(clubs.get(i).getClubName().equals(nombre)) {
+				encontrado = clubs.get(i);
+				encontre = true;
+			}
+		}
+		return encontrado;
+	}
+	
+
 
 }// cierra la clase

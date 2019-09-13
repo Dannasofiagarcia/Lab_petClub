@@ -137,7 +137,7 @@ public class ClubTest {
 		clubManager.agregarOwner(owner1);
 		clubManager.agregarOwner(owner2);
 	}
-	
+
 	private void setupEscenario7() {
 		clubManager = new ClubManager();
 		Club club1 = new Club("1", "Club1", new Date(01 / 01 / 2019), "Ave");
@@ -145,36 +145,169 @@ public class ClubTest {
 
 		Owner owner1 = new Owner("1", "Owner1", new Date(01 / 01 / 2000), "Ave");
 		clubManager.agregarOwner(owner1);
-		
+
 		Pet pet15 = new Pet("14", "pet15", new Date(02 / 01 / 2010), "Femenino", "Perro");
 		Pet pet13 = new Pet("13", "pet13", new Date(06 / 01 / 2010), "Femenino", "Mosca");
 		Pet pet14 = new Pet("14", "pet14", new Date(01 / 01 / 2010), "Masculino", "Nutria");
 		owner1.agregarPet(pet15);
 		owner1.agregarPet(pet13);
 		owner1.agregarPet(pet14);
-}
+	}
+
+	private void setupEscenario8() {
+		clubManager = new ClubManager();
+		Club club1 = new Club("1", "Club1", new Date(01 / 01 / 2019), "Ave");
+		clubManager.addClub(club1);
+
+		Owner owner1 = new Owner("1", "Owner1", new Date(01 / 01 / 2000), "Ave");
+		clubManager.agregarOwner(owner1);
+	}
+
+	private void setupEscenario9() {
+		clubManager = new ClubManager();
+		Club club1 = new Club("1", "Club1", new Date(01 / 01 / 2019), "Ave");
+		clubManager.addClub(club1);
+
+		Owner owner1 = new Owner("1", "Owner1", new Date(01 / 01 / 2000), "Ave");
+		clubManager.agregarOwner(owner1);
+
+		Pet pet15 = new Pet("14", "pet15", new Date(02 / 01 / 2010), "Femenino", "Perro");
+		owner1.agregarPet(pet15);
+	}
 
 	@Test
-	
+
 	public void testVerificarId() {
 		setupEscenario5();
 		boolean esperado = true;
-		boolean resultado = clubManager.getClubs().get(0).verificarId(clubManager.getClubs().get(0).getClubOwners().get(0));
+		boolean resultado = clubManager.getClubs().get(0)
+				.verificarId(clubManager.getClubs().get(0).getClubOwners().get(0));
 		assertEquals(esperado, resultado);
 	}
-	
+
 	@Test
-	
+
 	public void testAgregarDueno() {
 		setupEscenario1();
 		boolean esperado = true;
-		
+
 		boolean resultado = false;
 		Owner owner1 = new Owner("1", "Owner1", new Date(01 / 01 / 2000), "Ave");
 		clubManager.getClubs().get(0).agregarDueno(owner1);
-		
-		if(clubManager.getClubs().size() != 0) {
+
+		if (clubManager.getClubs().size() != 0) {
 			resultado = true;
 		}
+		assertEquals(esperado, resultado);
 	}
+
+	@Test
+
+	public void addPet() {
+		setupEscenario5();
+		boolean esperado = true;
+
+		boolean resultado = false;
+		Pet pet15 = new Pet("14", "pet15", new Date(02 / 01 / 2010), "Femenino", "Perro");
+		clubManager.getClubs().get(0).addPet(pet15);
+
+		if (clubManager.getClubs().get(0).getClubOwners().get(0).getPets().size() != 0) {
+			resultado = true;
+		}
+		assertEquals(esperado, resultado);
+	}
+
+	@Test
+
+	public void addPetByOwner() {
+		setupEscenario8();
+		boolean esperado = true;
+
+		boolean resultado = false;
+		Pet pet15 = new Pet("14", "pet15", new Date(02 / 01 / 2010), "Femenino", "Perro");
+		clubManager.getClubs().get(0).addPetToOwner(clubManager.getClubs().get(0).getClubOwners().get(0), pet15);
+		if (clubManager.getClubs().get(0).getClubOwners().get(0).getPets().size() != 0) {
+			resultado = true;
+		}
+		assertEquals(esperado, resultado);
+	}
+
+	@Test
+
+	public void searchOwnerByName() {
+		setupEscenario5();
+		boolean esperado = true;
+
+		boolean resultado = false;
+		if (clubManager.getClubs().get(0)
+				.searchOwnerByName(clubManager.getClubs().get(0).getClubOwners().get(0).getNameOwner()) == true) {
+			resultado = true;
+		}
+		assertEquals(esperado, resultado);
+	}
+
+	@Test
+
+	public void agregarPetToOwner() {
+		setupEscenario8();
+		boolean esperado = true;
+
+		boolean resultado = false;
+		Pet pet15 = new Pet("14", "pet15", new Date(02 / 01 / 2010), "Femenino", "Perro");
+		clubManager.getClubs().get(0)
+				.agregarPetToOwner(clubManager.getClubs().get(0).getClubOwners().get(0).getNameOwner(), pet15);
+		if (clubManager.getClubs().get(0).getClubOwners().get(0).getPets().size() != 0) {
+			resultado = true;
+		}
+		assertEquals(esperado, resultado);
+	}
+
+	@Test
+
+	public void eliminarDuenoId() {
+		setupEscenario5();
+
+		boolean eliminadoEsperado = true;
+
+		clubManager.eliminarOwnerPorId(clubManager.getClubs().get(0).getClubOwners().get(0).getIdOwner());
+
+		boolean eliminadoResultado = false;
+		if (clubManager.getClubs().get(0).getClubOwners().size() == 1) {
+			eliminadoResultado = true;
+		}
+		assertEquals(eliminadoEsperado, eliminadoResultado);
+	}
+
+	@Test
+
+	public void eliminarDuenoPorNombre() {
+		setupEscenario5();
+
+		boolean eliminadoEsperado = true;
+
+		clubManager.eliminarOwnerPorNombre(clubManager.getClubs().get(0).getClubOwners().get(0).getNameOwner());
+
+		boolean eliminadoResultado = false;
+		if (clubManager.getClubs().get(0).getClubOwners().size() == 1) {
+			eliminadoResultado = true;
+		}
+		assertEquals(eliminadoEsperado, eliminadoResultado);
+	}
+
+
+	public void eliminarMascotaId() {
+		setupEscenario9();
+
+		boolean eliminadoEsperado = false;
+
+		clubManager.getClubs().get(0)
+				.eliminarMascotaId(clubManager.getClubs().get(0).getClubOwners().get(0).getPets().get(0).getPetId());
+
+		boolean eliminadoResultado = false;
+		if (clubManager.getClubs().get(0).getClubOwners().get(0).getPets().size() == 0) {
+			eliminadoResultado = true;
+		}
+		assertEquals(eliminadoEsperado, eliminadoResultado);
+	}
+
 }
